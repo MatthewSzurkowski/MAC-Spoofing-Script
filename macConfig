@@ -1,0 +1,34 @@
+#!/bin/bash
+
+echo "This program allows you to spoof your MAC address."
+read -p "Would you like to spoof your MAC address? (yes/no): "  userResponse
+
+case $userResponse in 
+    #case 1 
+    "yes") echo "Spoofing MAC address"
+	   echo "Old MAC:" 
+	   ifconfig en1 | grep ether
+	   newAddress=$(openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//')
+	   check1Dup=$(ifconfig en1 | grep ether)
+	   echo "New MAC:"
+	   sudo ifconfig en1 ether $newAddress
+	   check2Dup=$(ifconfig en1 | grep ether)
+	   if [ "$check1Dup" == "$check2Dup" ]
+	   then
+		while [ "$check1Dup" == "$check2Dup" ]
+		do
+			check1Dup=$(ifconfig en1 | grep ether)
+			newAddress=$(openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//')
+			sudo ifconfig en1 ether $newAddress
+			check2Dup=$(ifconfig en1 | grep ether)
+		done
+	   fi
+	   ifconfig en1 | grep ether;;
+      
+    #case 2 
+    "no") echo "ending program." ;;
+
+    #case 3
+    *) echo "don't understand...";;
+esac
+echo "Goodbye!" 
