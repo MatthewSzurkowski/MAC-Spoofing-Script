@@ -1,34 +1,70 @@
 #!/bin/bash
+echo "███╗   ███╗ █████╗  ██████╗ ██████╗ ██████╗ ███╗   ██╗███████╗██╗ ██████╗ "
+echo "████╗ ████║██╔══██╗██╔════╝██╔════╝██╔═══██╗████╗  ██║██╔════╝██║██╔════╝ "
+echo "██╔████╔██║███████║██║     ██║     ██║   ██║██╔██╗ ██║█████╗  ██║██║  ███╗"
+echo "██║╚██╔╝██║██╔══██║██║     ██║     ██║   ██║██║╚██╗██║██╔══╝  ██║██║   ██║"
+echo "██║ ╚═╝ ██║██║  ██║╚██████╗╚██████╗╚██████╔╝██║ ╚████║██║     ██║╚██████╔╝"
+echo "╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝     ╚═╝ ╚═════╝ "
+echo $'\nThis program allows you to spoof your MAC address.'
+check=0
+while (( $check != 1 ))
+do
+	read -p $'Would you like to:\nSpoof your MAC address (1)\nCheck your MAC address (2)\nChange your MAC address to a specific address (3)\nLook at devices on the network (4)\nQuit (5)\n'  userResponse
+	echo $'\n'
+	case $userResponse in 
+		#case 1 
+		"1") echo "Spoofing MAC address"
+		echo "Old MAC:" 
+		ifconfig en1 | grep ether
+		newAddress=$(openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//')
+		check1Dup=$(ifconfig en1 | grep ether)
+		echo "New MAC:"
+		sudo ifconfig en1 ether $newAddress
+		check2Dup=$(ifconfig en1 | grep ether)
+		if [ "$check1Dup" == "$check2Dup" ]
+		then
+			while [ "$check1Dup" == "$check2Dup" ]
+			do
+				check1Dup=$(ifconfig en1 | grep ether)
+				newAddress=$(openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//')
+				sudo ifconfig en1 ether $newAddress
+				check2Dup=$(ifconfig en1 | grep ether)
+			done
+		fi
+		ifconfig en1 | grep ether
+		networksetup -setairportpower en1 off
+		sleep 2
+		networksetup -setairportpower en1 on
+		echo $'\n';;
+		
+		#case 2
+		"2")  ifconfig en1 | grep ether
+			echo $'\n';;
+		
+		#case 3
+		"3")  read -p $'Please enter the MAC address you would like:\n' specificMac
+			echo "Old MAC:"
+			ifconfig en1 | grep ether
+			sudo ifconfig en1 ether $specificMac
+			echo "New MAC:"
+			ifconfig en1 | grep ether
+			networksetup -setairportpower en1 off
+			sleep 2
+			networksetup -setairportpower en1 on
+			echo $'\n';;
+		
+		#case 4
+		"4") arp -a
+			echo $'\n';;
 
-echo "This program allows you to spoof your MAC address."
-read -p "Would you like to spoof your MAC address? (yes/no): "  userResponse
+		#case 5
+		"5") echo "ending program."
+			check=$(( check+1 ))
+			echo $'\n';;
 
-case $userResponse in 
-    #case 1 
-    "yes") echo "Spoofing MAC address"
-	   echo "Old MAC:" 
-	   ifconfig en1 | grep ether
-	   newAddress=$(openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//')
-	   check1Dup=$(ifconfig en1 | grep ether)
-	   echo "New MAC:"
-	   sudo ifconfig en1 ether $newAddress
-	   check2Dup=$(ifconfig en1 | grep ether)
-	   if [ "$check1Dup" == "$check2Dup" ]
-	   then
-		while [ "$check1Dup" == "$check2Dup" ]
-		do
-			check1Dup=$(ifconfig en1 | grep ether)
-			newAddress=$(openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//')
-			sudo ifconfig en1 ether $newAddress
-			check2Dup=$(ifconfig en1 | grep ether)
-		done
-	   fi
-	   ifconfig en1 | grep ether;;
-      
-    #case 2 
-    "no") echo "ending program." ;;
-
-    #case 3
-    *) echo "don't understand...";;
-esac
-echo "Goodbye!" 
+		#case 6
+		*) echo "try again..."
+		echo $'\n';;
+	esac
+done
+echo "Goodbye!"
