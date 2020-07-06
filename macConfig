@@ -5,7 +5,7 @@ echo "██╔████╔██║███████║██║     █
 echo "██║╚██╔╝██║██╔══██║██║     ██║     ██║   ██║██║╚██╗██║██╔══╝  ██║██║   ██║"
 echo "██║ ╚═╝ ██║██║  ██║╚██████╗╚██████╗╚██████╔╝██║ ╚████║██║     ██║╚██████╔╝"
 echo "╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝     ╚═╝ ╚═════╝ "
-echo $'\nThis program allows you to spoof your MAC address.'
+echo -e '\nThis program allows you to spoof your MAC address.'
 check=0
 while (( $check != 1 ))
 do
@@ -35,11 +35,11 @@ do
 		networksetup -setairportpower en1 off
 		sleep 2
 		networksetup -setairportpower en1 on
-		echo $'\n';;
+		echo -e '\n';;
 		
 		#case 2
 		"2")  ifconfig en1 | grep ether
-			echo $'\n';;
+			echo -e '\n';;
 		
 		#case 3
 		"3")  read -p $'Please enter the MAC address you would like:\n' specificMac
@@ -51,20 +51,20 @@ do
 			networksetup -setairportpower en1 off
 			sleep 2
 			networksetup -setairportpower en1 on
-			echo $'\n';;
+			echo -e '\n';;
 		
 		#case 4
 		"4") arp -a
-			echo $'\n';;
+			echo -e '\n';;
 
 		#case 5
 		"5") echo "ending program."
 			check=$(( check+1 ))
-			echo $'\n';;
+			echo -e '\n';;
 
 		#case 6
 		*) echo "try again..."
-		echo $'\n';;
+		echo -e '\n';;
 	esac
 done
-echo "Goodbye!"
+echo -e "Goodbye!\n"
