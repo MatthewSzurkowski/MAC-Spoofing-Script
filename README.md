@@ -12,4 +12,4 @@ The script should be placed in **/usr/local/bin**. To run, simply type:
 ```
 macConfig
 ```
-![Screenshot](https://i.imgur.com/cbK92dJ.png "macConfig")
+![macConfigPreview](https://user-images.githubusercontent.com/61432155/87740908-58224080-c7b1-11ea-98e0-accd3417604b.png)
