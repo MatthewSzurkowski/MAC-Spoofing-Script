@@ -1,6 +1,7 @@
 # macConfig
 
 macConfig is a shell script that makes MAC spoofing much easier.
+This program was created to maneuver around Circle by Disney.
 
 ## Requirements
 
